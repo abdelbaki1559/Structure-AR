@@ -1,20 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR avec Hiro Marker</title>
-    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <meta charset="utf-8">
+    <title>AR Structure avec Hiro Marker</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
+    <style>
+      body { margin: 0; overflow: hidden; }
+    </style>
+
+    <script>
+      // Corriger le problème de caméra (évite l'ultra-wide)
+      window.addEventListener("load", async () => {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const backCam = devices.find(device =>
+          device.kind === "videoinput" && device.label.toLowerCase().includes("back")
+        );
+        if (backCam) {
+          document.querySelector("a-scene").setAttribute("arjs", `sourceType: webcam; sourceId: ${backCam.deviceId}`);
+        }
+      });
+    </script>
   </head>
-  <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam;">
+
+  <body>
+    <a-scene embedded>
+      <!-- Définition du modèle -->
       <a-assets>
         <a-asset-item id="model" src="structure.glb"></a-asset-item>
       </a-assets>
 
+      <!-- Marqueur Hiro + modèle -->
       <a-marker preset="hiro">
         <a-gltf-model src="#model" scale="0.03 0.03 0.03" position="0 0 0"></a-gltf-model>
       </a-marker>
 
+      <!-- Caméra AR -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
