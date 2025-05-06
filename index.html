@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>AR Structure avec Hiro Marker</title>
+    <title>AR Structure - Hiro Stable</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
     <style>
@@ -10,7 +10,6 @@
     </style>
 
     <script>
-      // Corriger le problème de caméra (évite l'ultra-wide)
       window.addEventListener("load", async () => {
         const devices = await navigator.mediaDevices.enumerateDevices();
         const backCam = devices.find(device =>
@@ -25,17 +24,15 @@
 
   <body>
     <a-scene embedded>
-      <!-- Définition du modèle -->
       <a-assets>
         <a-asset-item id="model" src="structure.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Marqueur Hiro + modèle -->
-      <a-marker preset="hiro">
-        <a-gltf-model src="#model" scale="0.03 0.03 0.03" position="0 0 0"></a-gltf-model>
+      <a-marker preset="hiro" emitevents="true">
+        <!-- Agrandir la structure et légèrement surélevée -->
+        <a-gltf-model src="#model" scale="0.1 0.1 0.1" position="0 0.05 0"></a-gltf-model>
       </a-marker>
 
-      <!-- Caméra AR -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
