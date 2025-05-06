@@ -2,12 +2,30 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>AR Interactif - Rotation, Zoom, Déplacement</title>
+    <title>AR Touch Interactif</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.2/aframe/build/aframe-ar.min.js"></script>
     <style>
       body { margin: 0; overflow: hidden; touch-action: none; }
     </style>
+  </head>
+
+  <body>
+    <a-scene embedded arjs>
+      <a-assets>
+        <a-asset-item id="model" src="structure.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Marqueur Hiro -->
+      <a-marker preset="hiro">
+        <!-- Structure 3D attachée au marqueur -->
+        <a-entity id="structure" gltf-model="#model" scale="0.1 0.1 0.1" rotation="0 0 0"></a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- SCRIPT DE GESTION DES GESTES TACTILES -->
     <script>
       let lastTouchX = null;
       let initialDistance = null;
@@ -23,22 +41,7 @@
       }
 
       window.addEventListener("load", () => {
-        const marker = document.querySelector("a-marker");
         model = document.querySelector("#structure");
-
-        marker.addEventListener("markerFound", () => {
-          if (!model.getAttribute("visible")) {
-            model.setAttribute("visible", true);
-            const worldPos = new THREE.Vector3();
-            const worldQuat = new THREE.Quaternion();
-            marker.object3D.getWorldPosition(worldPos);
-            marker.object3D.getWorldQuaternion(worldQuat);
-
-            model.setAttribute("position", worldPos);
-            model.setAttribute("rotation", marker.getAttribute("rotation"));
-            document.querySelector("a-scene").appendChild(model);
-          }
-        });
 
         document.body.addEventListener("touchstart", (e) => {
           if (e.touches.length === 1) {
@@ -54,7 +57,6 @@
           if (isRotating && e.touches.length === 1) {
             const deltaX = e.touches[0].clientX - lastTouchX;
             lastTouchX = e.touches[0].clientX;
-
             const rotation = model.getAttribute("rotation");
             rotation.y += deltaX * 0.5;
             model.setAttribute("rotation", rotation);
@@ -62,33 +64,16 @@
             const currentDistance = getDistance(e.touches);
             const scaleFactor = currentDistance / initialDistance;
             const newScale = initialScale * scaleFactor;
-
             model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
           }
         });
 
-        document.body.addEventListener("touchend", (e) => {
-          if (e.touches.length === 0) {
-            isRotating = false;
-            isPinching = false;
-            initialScale = model.getAttribute("scale").x;
-          }
+        document.body.addEventListener("touchend", () => {
+          isRotating = false;
+          isPinching = false;
+          initialScale = model.getAttribute("scale").x;
         });
       });
     </script>
-  </head>
-
-  <body>
-    <a-scene embedded arjs>
-      <a-assets>
-        <a-asset-item id="model" src="structure.glb"></a-asset-item>
-      </a-assets>
-
-      <a-entity id="structure" gltf-model="#model" scale="0.05 0.05 0.05" visible="false"></a-entity>
-
-      <a-marker preset="hiro" emitevents="true"></a-marker>
-
-      <a-entity camera></a-entity>
-    </a-scene>
   </body>
 </html>
