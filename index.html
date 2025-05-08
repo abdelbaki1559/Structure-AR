@@ -54,11 +54,11 @@
       z-index: 2;
     }
     #loadingText {
-      top: 50%;
+      bottom: 120px; /* affiché en bas */
       display: none;
     }
     #successMessage {
-      top: 60%;
+      bottom: 60px;
       color: #0f0;
       display: none;
     }
@@ -68,12 +68,16 @@
       left: 10px;
       width: 70px;
       z-index: 3;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <img src="BETL.png" alt="Logo Bureau" class="logo" />
+  <!-- Logo cliquable vers la page Facebook -->
+  <a href="https://www.facebook.com/BETL121" target="_blank">
+    <img src="BETL.png" alt="Logo Bureau" class="logo" />
+  </a>
 
   <div class="switch-buttons">
     <button onclick="changeModel('ammariarchitecture.glb')">Architecture</button>
@@ -105,8 +109,6 @@
     const loadingText = document.getElementById('loadingText');
     const successMessage = document.getElementById('successMessage');
 
-    let modelLoaded = false;
-
     function showSuccessMessage() {
       successMessage.style.display = 'block';
       setTimeout(() => {
@@ -118,20 +120,17 @@
       const progress = Math.floor(event.detail.totalProgress * 100);
       loadingText.textContent = `Chargement... ${progress}%`;
       loadingText.style.display = 'block';
-      if (progress === 100) {
-        modelLoaded = true;
-      }
-    });
 
-    viewer.addEventListener('load', () => {
-      if (modelLoaded) {
-        loadingText.style.display = 'none';
-        showSuccessMessage();
+      // Si chargé à 100%, masquer après un petit délai
+      if (progress === 100) {
+        setTimeout(() => {
+          loadingText.style.display = 'none';
+          showSuccessMessage();
+        }, 500);
       }
     });
 
     function changeModel(path) {
-      modelLoaded = false;
       viewer.src = path;
       loadingText.textContent = 'Chargement... 0%';
       loadingText.style.display = 'block';
