@@ -42,11 +42,10 @@
       font-size: 16px;
       z-index: 1;
     }
-    #loadingText {
+    #loadingText, #successMessage {
       position: absolute;
-      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       color: white;
       font-size: 18px;
       background: rgba(0, 0, 0, 0.6);
@@ -54,9 +53,26 @@
       border-radius: 10px;
       z-index: 2;
     }
+    #loadingText {
+      top: 50%;
+    }
+    #successMessage {
+      top: 60%;
+      color: #0f0;
+      display: none;
+    }
+    .logo {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 100px;
+      z-index: 3;
+    }
   </style>
 </head>
 <body>
+
+  <img src="logo.png" alt="Logo Bureau" class="logo" />
 
   <div class="switch-buttons">
     <button onclick="changeModel('ammariarchitecture.glb')">Architecture</button>
@@ -64,6 +80,7 @@
   </div>
 
   <div id="loadingText">Chargement... 0%</div>
+  <div id="successMessage">✅ Modèle chargé avec succès</div>
 
   <model-viewer 
     id="modelViewer"
@@ -85,17 +102,24 @@
   <script>
     const viewer = document.getElementById('modelViewer');
     const loadingText = document.getElementById('loadingText');
+    const successMessage = document.getElementById('successMessage');
 
-    // Afficher le texte de chargement
+    function showSuccessMessage() {
+      successMessage.style.display = 'block';
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 2000);
+    }
+
     viewer.addEventListener('progress', (event) => {
       const progress = Math.floor(event.detail.totalProgress * 100);
       loadingText.textContent = `Chargement... ${progress}%`;
       loadingText.style.display = 'block';
     });
 
-    // Cacher une fois chargé
     viewer.addEventListener('load', () => {
       loadingText.style.display = 'none';
+      showSuccessMessage();
     });
 
     function changeModel(path) {
