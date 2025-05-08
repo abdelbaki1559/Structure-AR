@@ -55,6 +55,7 @@
     }
     #loadingText {
       top: 50%;
+      display: none;
     }
     #successMessage {
       top: 60%;
@@ -104,6 +105,8 @@
     const loadingText = document.getElementById('loadingText');
     const successMessage = document.getElementById('successMessage');
 
+    let modelLoaded = false;
+
     function showSuccessMessage() {
       successMessage.style.display = 'block';
       setTimeout(() => {
@@ -115,17 +118,24 @@
       const progress = Math.floor(event.detail.totalProgress * 100);
       loadingText.textContent = `Chargement... ${progress}%`;
       loadingText.style.display = 'block';
+      if (progress === 100) {
+        modelLoaded = true;
+      }
     });
 
     viewer.addEventListener('load', () => {
-      loadingText.style.display = 'none';
-      showSuccessMessage();
+      if (modelLoaded) {
+        loadingText.style.display = 'none';
+        showSuccessMessage();
+      }
     });
 
     function changeModel(path) {
+      modelLoaded = false;
       viewer.src = path;
       loadingText.textContent = 'Chargement... 0%';
       loadingText.style.display = 'block';
+      successMessage.style.display = 'none';
     }
   </script>
 
