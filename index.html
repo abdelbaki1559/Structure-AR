@@ -33,7 +33,7 @@
     }
     .ar-button {
       position: absolute;
-      bottom: 100px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       padding: 12px 24px;
@@ -47,7 +47,7 @@
       left: 50%;
       transform: translateX(-50%);
       color: white;
-      font-size: 18px;
+      font-size: 14px;
       background: rgba(0, 0, 0, 0.6);
       padding: 10px 20px;
       border-radius: 10px;
@@ -66,8 +66,8 @@
 <body>
 
   <div class="switch-buttons">
-    <button onclick="changeModel('architecture.glb')">Architecture</button>
-    <button onclick="changeModel('geniecivil.glb')">Génie Civil</button>
+    <button onclick="changeModel('arammariarchitecture.glb')">Architecture</button>
+    <button onclick="changeModel('ammarigeniecivil.glb')">Génie Civil</button>
   </div>
 
   <div id="loadingText">Chargement... 0%</div>
@@ -75,7 +75,7 @@
 
   <model-viewer 
     id="modelViewer"
-    src="architecture.glb"
+    src="ammariarchitecture.glb"
     ar
     ar-modes="scene-viewer webxr"
     camera-controls
