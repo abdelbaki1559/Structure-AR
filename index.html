@@ -47,7 +47,7 @@
       left: 50%;
       transform: translateX(-50%);
       color: white;
-      font-size: 14px;
+      font-size: 18px;
       background: rgba(0, 0, 0, 0.6);
       padding: 10px 20px;
       border-radius: 10px;
@@ -55,18 +55,28 @@
     }
     #loadingText {
       top: 50%;
+      display: none;
     }
     #successMessage {
       top: 60%;
       color: #0f0;
       display: none;
     }
+    .logo {
+      position: absolute;
+      top: 70px;
+      left: 10px;
+      width: 70px;
+      z-index: 3;
+    }
   </style>
 </head>
 <body>
 
+  <img src="BETL.png" alt="Logo Bureau" class="logo" />
+
   <div class="switch-buttons">
-    <button onclick="changeModel('arammariarchitecture.glb')">Architecture</button>
+    <button onclick="changeModel('ammariarchitecture.glb')">Architecture</button>
     <button onclick="changeModel('ammarigeniecivil.glb')">Génie Civil</button>
   </div>
 
@@ -95,6 +105,8 @@
     const loadingText = document.getElementById('loadingText');
     const successMessage = document.getElementById('successMessage');
 
+    let modelLoaded = false;
+
     function showSuccessMessage() {
       successMessage.style.display = 'block';
       setTimeout(() => {
@@ -106,17 +118,24 @@
       const progress = Math.floor(event.detail.totalProgress * 100);
       loadingText.textContent = `Chargement... ${progress}%`;
       loadingText.style.display = 'block';
+      if (progress === 100) {
+        modelLoaded = true;
+      }
     });
 
     viewer.addEventListener('load', () => {
-      loadingText.style.display = 'none';
-      showSuccessMessage();
+      if (modelLoaded) {
+        loadingText.style.display = 'none';
+        showSuccessMessage();
+      }
     });
 
     function changeModel(path) {
+      modelLoaded = false;
       viewer.src = path;
       loadingText.textContent = 'Chargement... 0%';
       loadingText.style.display = 'block';
+      successMessage.style.display = 'none';
     }
   </script>
 
